@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect, useState} from 'react';
+// Redux
+import { Provider } from "react-redux";
+import store from './redux/store';
+// Routing
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+// Styles
+import { GlobalStyle } from './GlobalStyle';
+import { Content, Wrapper } from "./App.styles";
+// Components
+import Header from './component/header/Header';
+import Footer from './component/footer/Footer';
+import Custom from './component/custom/Custom';
+import Chats from "./component/chats/Chats";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <>
+            <Provider store={store}>
+                <Router>
+                    <Wrapper>
+                        <Header />
+                        <Content>
+                            <Routes>
+                                <Route path='/custom' element={<Custom />} />
+                                <Route path='/chat/*' element={<Chats />} />
+                            </Routes>
+                        </Content>
+                        <Footer />
+                    </Wrapper>
+                </Router>
+            </Provider>
+            <GlobalStyle />
+        </>
+    );
 }
 
 export default App;
