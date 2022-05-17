@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 // Styles
 import {
     Wrapper,
@@ -20,6 +20,16 @@ import Message from './message/Message';
 
 const Messages = ({ messages }) => {
     const meId = useSelector(state => state.user.user.userId);
+
+    const messagesEndRef = useRef(null)
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    }
+    useEffect(() => {
+        scrollToBottom()
+        console.log('scroll')
+    }, [messages]);
+
 
     if(messages.length === 0) {
         return (
@@ -46,7 +56,7 @@ const Messages = ({ messages }) => {
         }
         const data = tempDayMessagesGroup.data;
         dayGroupMessages.push(
-            <DayMessageGroupContainer key={`day_messages_group_${data}`}>
+            <DayMessageGroupContainer key={`day_messages_group_${data}`} id={`day_messages_group_${data}`}>
                 <DataContainer>{ data }</DataContainer>
                 <DayMessageGroupList>
                     {tempDayMessagesGroup.groups}
@@ -119,6 +129,7 @@ const Messages = ({ messages }) => {
         <Wrapper>
             <Content>
                 { dayGroupMessages }
+                <div ref={messagesEndRef} />
             </Content>
         </Wrapper>
     )

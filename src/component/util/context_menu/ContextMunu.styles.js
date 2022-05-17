@@ -8,10 +8,10 @@ export const Wrapper = styled.div`
   height: auto;
   width: fit-content;
   padding: 10px 0;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  box-shadow: var(--box-shadow-standart);
   background: white;
   border-radius: 10px;
-  display: ${state => state.visible ? 'block' : 'none'};
+  display: ${props => props.visible ? 'block' : 'none'};
 `;
 
 export const ItemWrapper = styled.div`
@@ -32,6 +32,7 @@ export const ItemContent = styled.div`
   width: 100%;
   font-size: 1em;
   padding-right: 10px;
+  color: ${props => props.extraStyle === 'dangerous' ? 'red' : 'inherit'}
 `;
 
 export const ItemImg = styled.img`

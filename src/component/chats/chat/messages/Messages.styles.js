@@ -16,12 +16,13 @@ export const DayMessageGroupContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 5px;
 `;
 
 export const DataContainer = styled.div`
   width: fit-content;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  box-shadow: var(--box-shadow-standart);
   padding: 6px;
   margin: 4px;
 `;
@@ -55,7 +56,5 @@ export const Avatar = styled.div`
   min-height: 40px;
   max-width: 40px;
   max-height: 40px;
-  margin: 5px;
   margin-right: -45px;
-  display: block;
 `;

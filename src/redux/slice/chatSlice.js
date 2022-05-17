@@ -56,6 +56,18 @@ export const updateMessage = createAsyncThunk(
     }
 );
 
+export const deleteMessage = createAsyncThunk(
+    'deleteMessage',
+    async ({ messageId }, { getState, rejectWithValue }) => {
+        try {
+            const stateChat = getState().chat;
+            return await API.deleteMessage(messageId, stateChat.messages);
+        } catch (ex) {
+            return rejectWithValue('Opps there seems to be an error')
+        }
+    }
+);
+
 export const findChats = createAsyncThunk(
      'findChats',
     async (_, { getState, rejectWithValue }) => {
@@ -85,6 +97,9 @@ const chatSlice = createSlice({
             }
         ],
         messages: [],
+        selectedChat: {
+            chatRoomId: ""
+        },
         editMode: {
             isEdit: false,
             oldText: '',
@@ -95,10 +110,13 @@ const chatSlice = createSlice({
     },
     reducers: {
         setEditMode: (state, { payload }) => {
-            state.editMode.isEdit = true;
+            state.editMode.isEdit = payload.isEdit;
             state.editMode.oldText = payload.text;
             state.editMode.messageId = payload.messageId;
         },
+        setSelectedChat: (state, { payload }) => {
+            state.selectedChat.chatRoomId = payload;
+        }
     },
     extraReducers: {
         [findChat.pending]: (state) => {
@@ -164,9 +182,29 @@ const chatSlice = createSlice({
             console.log(payload)
             state.error = payload;
             state.isLoadingChat = false;
+        },
+
+        [deleteMessage.pending]: (state) => {
+            state.isLoadingChat = true;
+        },
+        [deleteMessage.fulfilled]: (state, { payload }) => {
+            let index = -1;
+            console.log(payload)
+            state.messages.forEach((m, i) => {
+                if(m.id === payload.id) {
+                    index = i;
+                }
+            });
+            state.messages.splice(index, 1);
+            state.isLoadingChat = false;
+        },
+        [deleteMessage.rejected]: (state, { payload }) => {
+            console.log(payload)
+            state.error = payload;
+            state.isLoadingChat = false;
         }
     }
 });
 
-export const { setEditMode } = chatSlice.actions;
+export const { setEditMode, setSelectedChat } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -26,20 +26,19 @@ export const StyledFormContainer = styled.div`
   }
 
   .submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     max-width: 45px;
     max-height: 45px;
     min-width: 45px;
     min-height: 45px;
     margin: 0 0 8px 8px;
-    color: white;
-    background-color: #77bae1;
+    background-color: var(--darkBlue);
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    box-shadow: var(--box-shadow-standart);
 
     img {
       width: 25px;
@@ -55,7 +54,7 @@ export const InputContainer = styled.div`
   margin-bottom: 8px;
   background: white;
   border-radius: 8px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  box-shadow: var(--box-shadow-standart);
 `;
 
 export const EditContainer = styled.div`

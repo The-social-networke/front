@@ -13,9 +13,10 @@ import {
 import editedImg from '../../../../../image/edited.svg';
 import copyImg from '../../../../../image/copy.svg';
 import seenImg from '../../../../../image/seen.png';
+import deleteImg from '../../../../../image/delete.svg';
 // Redux
 import { useDispatch } from "react-redux";
-import { setEditMode } from "../../../../../redux/slice/chatSlice";
+import { deleteMessage, setEditMode } from "../../../../../redux/slice/chatSlice";
 // Components
 import MyCustomContextMenu from "../../../../util/context_menu/ContextMenu";
 
@@ -24,7 +25,7 @@ const Message = ({ id , text, sentAt, isEdited, isRead, isMe }) => {
     const shortData = sentAt.substring(11, 16);
     const contextMenuItems = [
         {
-            name: 'copy',
+            name: 'Copy',
             icon: copyImg,
             action: async () => {
                 await navigator.clipboard.writeText(text);
@@ -34,18 +35,27 @@ const Message = ({ id , text, sentAt, isEdited, isRead, isMe }) => {
 
     if (isMe) {
         contextMenuItems.push({
-            name: 'edit',
+            name: 'Edit',
             icon: editedImg,
             action: () => {dispatch(setEditMode({
+                isEdit: true,
                 text: text,
                 messageId: id
             }))}
+        })
+        contextMenuItems.push({
+            name: 'Delete',
+            icon: deleteImg,
+            action: () => {dispatch(deleteMessage({
+                messageId: id
+            }))},
+            extraStyle: 'dangerous'
         })
     }
 
     return (
         <>
-            <Wrapper>
+            <Wrapper id={id}>
                 <ContentMessage>
                     <TextMessage>{text}</TextMessage>
                     <AdditionalContent>

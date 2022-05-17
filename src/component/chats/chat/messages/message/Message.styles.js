@@ -6,7 +6,7 @@ export const Wrapper = styled.div`
   background: white;
   padding: 6px;
   margin: 5px;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  box-shadow: var(--box-shadow-standart);
 `;
 
 export const ContentMessage = styled.div`

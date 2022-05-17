@@ -12,6 +12,7 @@ import Header from './component/header/Header';
 import Footer from './component/footer/Footer';
 import Custom from './component/custom/Custom';
 import Chats from "./component/chats/Chats";
+import {Spinner} from "./component/util/spiner/Spiner.styles";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                             <Routes>
                                 <Route path='/custom' element={<Custom />} />
                                 <Route path='/chat/*' element={<Chats />} />
+                                <Route path='/' element={<Spinner />} />
                             </Routes>
                         </Content>
                         <Footer />

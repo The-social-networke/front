@@ -16,7 +16,7 @@ import sendMessageImg from '../../../../image/sendMessage.png';
 import editModeBlueImg from '../../../../image/editedBlue.svg';
 import closeImg from '../../../../image/close.png';
 // Redux
-import {sendMessage, updateMessage} from "../../../../redux/slice/chatSlice";
+import {sendMessage, setEditMode, updateMessage} from "../../../../redux/slice/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
 // Formik
 import { Field, Form, Formik } from "formik";
@@ -40,9 +40,24 @@ const WriteMessages = () => {
                         editMode.isEdit
                             ? dispatch(updateMessage(values.message))
                             : dispatch(sendMessage(values.message));
+                        values.message = '';
+                        editMode.isEdit && dispatch(setEditMode({
+                            isEdit: false,
+                            text: '',
+                            messageId: ''
+                        }))
                     }}
             >
                 {formik => {
+                    const handleUserKeyPress = e => {
+                        if (e.key === "Enter" && !e.shiftKey && formik.values.message !== '') {
+                            formik.handleSubmit();
+                            e.preventDefault();
+                        }
+                        if (e.key === "Enter" && !e.shiftKey && formik.values.message === '') {
+                            e.preventDefault();
+                        }
+                    };
                     return (
                         <Form>
                             <StyledFormContainer>
@@ -58,8 +73,13 @@ const WriteMessages = () => {
                                     </EditContainer> }
                                     <Field name="message">
                                         {({ field, form, meta }) => {
-                                            return <TextareaAutosize {...field} id="message" minRows={1} maxRows={10}
-                                                                     className='textarea' placeholder="message"/>
+                                            return <TextareaAutosize
+                                                {...field} id="message"
+                                                minRows={1}
+                                                maxRows={10}
+                                                className='textarea'
+                                                placeholder="message"
+                                                onKeyPress={handleUserKeyPress}/>
                                         }}
                                     </Field>
                                 </InputContainer>

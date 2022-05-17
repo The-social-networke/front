@@ -5,7 +5,6 @@ export const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #c6fdf6;
 `;
 
 export const WriteMessageContainer = styled.div`
@@ -16,7 +15,8 @@ export const WriteMessageContainer = styled.div`
 
 
 export const ChatInfoContainer = styled.div`
-  background: gray;
+  border-left: rgba(0, 0, 0, 0.16) 1px solid;
+  background: var(--white);
   flex: 0;
   padding: 10px;
 `;

@@ -5,7 +5,7 @@ import { Wrapper, ItemWrapper, ItemImg, ItemContent } from './ContextMunu.styles
 import editedImg from '../../../image/edited.svg';
 
 
-const MyCustomContextMenu = ({targetId, items }) => {
+const MyCustomContextMenu = ({targetId, items}) => {
     const [contextData, setContextData]= useState({ visible:false, posX: 0, posY: 0});
     const contextRef = useRef(null);
 
@@ -53,7 +53,11 @@ const MyCustomContextMenu = ({targetId, items }) => {
                     setContextData({ ...contextData, visible: false });
                 }}>
                     <ItemImg src={item.icon}/>
-                    <ItemContent>{item.name}</ItemContent>
+                    {
+                        item.extraStyle && item.extraStyle === 'dangerous'
+                            ? <ItemContent extraStyle='dangerous'>{item.name}</ItemContent>
+                            : <ItemContent>{item.name}</ItemContent>
+                    }
                 </ItemWrapper>)}
         </Wrapper>
     );

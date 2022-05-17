@@ -10,8 +10,8 @@ export const Content = styled.div`
   justify-content: space-between;
   align-items: center;
   max-width: var(--maxWidth);
-  padding: 1% 0;
-  margin: 0 2%;
+  padding: 10px 0;
+  margin: 0 10px;
 `;
 
 export const LeftContent = styled.div`
