@@ -73,10 +73,16 @@ export const EditImg = styled.img`
 `;
 
 export const EditImgEnd = styled.img`
-  padding: 3px;
-  width: 25px;
-  height: 25px;
+  border-radius: 50%;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
   margin-left: auto;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: var(--whiteGrey);
+  }
 `;
 
 export const EditTextContainer = styled.div`

@@ -28,6 +28,14 @@ const WriteMessages = () => {
     const dispatch = useDispatch();
     const editMode = useSelector(state => state.chat.editMode)
 
+    const closeEditMode = () => {
+        dispatch(setEditMode({
+            isEdit: false,
+            text: '',
+            messageId: null
+        }))
+    }
+
     return (
         <Wrapper>
             <Formik
@@ -39,7 +47,9 @@ const WriteMessages = () => {
                     async (values) => {
                         editMode.isEdit
                             ? dispatch(updateMessage(values.message))
-                            : dispatch(sendMessage(values.message));
+                            : dispatch(sendMessage({
+                                text: values.message
+                            }));
                         values.message = '';
                         editMode.isEdit && dispatch(setEditMode({
                             isEdit: false,
@@ -69,7 +79,7 @@ const WriteMessages = () => {
                                             <EditTextTitle>Editing</EditTextTitle>
                                             <EditTextContent>{editMode.oldText}</EditTextContent>
                                         </EditTextContainer>
-                                        <EditImgEnd src={closeImg}/>
+                                        <EditImgEnd src={closeImg} onClick={closeEditMode}/>
                                     </EditContainer> }
                                     <Field name="message">
                                         {({ field, form, meta }) => {

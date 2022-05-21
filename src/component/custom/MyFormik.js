@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
 // Redux
 import { useSelector, useDispatch } from 'react-redux'
-import { findChat, findMessages } from "../../redux/slice/chatSlice";
+import { findChat } from "../../redux/slice/chatSlice";
 import { setLogin } from "../../redux/slice/userSlice";
 // Form
-import {Formik, Form, Field, useFormik} from 'formik';
+import { Formik, Form, Field } from 'formik';
 // Components
 import Spinner from "../util/spiner/Spinner";
 
@@ -26,7 +26,6 @@ const MyFormik = () => {
                                 userId: values.userId
                             }))
                             await dispatch(findChat());
-                            dispatch(findMessages());
                     }}
                 >
                     <Form>

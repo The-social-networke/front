@@ -19,7 +19,7 @@ import Message from './message/Message';
 
 
 const Messages = ({ messages }) => {
-    const meId = useSelector(state => state.user.user.userId);
+    const meId = useSelector(state => state.user.user.id);
 
     const messagesEndRef = useRef(null)
     const scrollToBottom = () => {
@@ -70,10 +70,10 @@ const Messages = ({ messages }) => {
 
     let indexGroup = 0;
     let addGroupToGroupMessages = () => {
-        const isMe = tempMessagesGroup.userId === meId;
+        const isMe = tempMessagesGroup.userId !== meId;
         tempDayMessagesGroup.groups.push(
             <MessageGroup key={`messages_group_${indexGroup++}`}>
-                { tempMessagesGroup.userId === meId
+                { tempMessagesGroup.userId !== meId
                     ? <MessageList>
                         { tempMessagesGroup.messages.map(m => (<Message
                             key={m.id}
@@ -91,7 +91,7 @@ const Messages = ({ messages }) => {
                             text={m.text}
                             sentAt={m.sentAt}
                             isEdited={m.updated}
-                            isRead={m.messageReads.length !== 0}
+                            isRead={m.readMessages.length !== 0}
                             isMe={true} />)) }
                     </MessageList>
                 }
@@ -101,14 +101,14 @@ const Messages = ({ messages }) => {
         tempMessagesGroup.messages = [];
     }
     if (messages.length !== 0) {
-        tempDayMessagesGroup.data = messages[0].sentAt.substring(5, 10);
+        tempDayMessagesGroup.data = `${messages[0].sentAt[1]}:${messages[0].sentAt[2]}`;
     }
     for (let i = 0; i <= messages.length; i++) {
         if (tempDayMessagesGroup.data && i < messages.length) {
-            if (tempDayMessagesGroup.data !== messages[i].sentAt.substring(5, 10)) {
+            if (tempDayMessagesGroup.data !== `${messages[i].sentAt[1]}:${messages[0].sentAt[2]}`) {
                 addGroupMessagesToMonthGroupMessages();
             }
-            tempDayMessagesGroup.data = messages[i].sentAt.substring(5, 10);
+            tempDayMessagesGroup.data = `${messages[i].sentAt[1]}:${messages[0].sentAt[2]}`;
         }
         if (i < messages.length) {
             if(tempMessagesGroup.userId && tempMessagesGroup.userId !== messages[i].userId) {
@@ -119,7 +119,7 @@ const Messages = ({ messages }) => {
         }
         else {
             if (tempDayMessagesGroup.data === '') {
-                const data = messages[i - 1].sentAt.substring(5, 10);
+                const data = `${messages[i-1].sentAt[1]}:${messages[i-1].sentAt[2]}`;
                 tempDayMessagesGroup.data = data;
             }
             addGroupMessagesToMonthGroupMessages();

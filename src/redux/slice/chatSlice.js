@@ -5,63 +5,10 @@ const nameOfSlice = 'chatSlice';
 
 export const findChat = createAsyncThunk(
     'fetchChat',
-    async (_, { getState, rejectWithValue }) => {
+    async (userId, { getState, rejectWithValue }) => {
         try {
-            const state = getState().user.user;
-            return await API.findChat(state.userId, state.jwtToken);
-        } catch (ex) {
-            return rejectWithValue('Opps there seems to be an error')
-        }
-    }
-);
-
-export const findMessages = createAsyncThunk(
-    'findMessage',
-    async (chatId, { getState, rejectWithValue }) => {
-        try {
-            const state = getState().chat;
-            return await API.findMessages(chatId['*'], state.jwtToken);
-        } catch (ex) {
-            return rejectWithValue('Opps there seems to be an error')
-        }
-    }
-);
-
-export const sendMessage = createAsyncThunk(
-    'sendMessage',
-    /**
-     * @param {string} text - The text for new message
-     * @param getState
-     * @param rejectWithValue
-     */
-    async (text, { getState, rejectWithValue }) => {
-        try {
-            const state = getState();
-            return await API.sendMessage(text.trim(), state.user.userId);
-        } catch (ex) {
-            return rejectWithValue('Opps there seems to be an error')
-        }
-    }
-);
-
-export const updateMessage = createAsyncThunk(
-    'updateMessage',
-    async (text, { getState, rejectWithValue }) => {
-        try {
-            const stateChat = getState().chat;
-            return await API.updateMessage(stateChat.editMode.messageId, text.trim(), stateChat.messages);
-        } catch (ex) {
-            return rejectWithValue('Opps there seems to be an error')
-        }
-    }
-);
-
-export const deleteMessage = createAsyncThunk(
-    'deleteMessage',
-    async ({ messageId }, { getState, rejectWithValue }) => {
-        try {
-            const stateChat = getState().chat;
-            return await API.deleteMessage(messageId, stateChat.messages);
+            const state = getState().user;
+            return await API.findChat(userId, state.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -69,7 +16,7 @@ export const deleteMessage = createAsyncThunk(
 );
 
 export const findChats = createAsyncThunk(
-     'findChats',
+    'findChats',
     async (_, { getState, rejectWithValue }) => {
         try {
             console.log('find')
@@ -81,22 +28,252 @@ export const findChats = createAsyncThunk(
     }
 );
 
+export const sendMessage = createAsyncThunk(
+    'sendMessage',
+    /**
+     * @param {string} chatId
+     * @param {string} text - The text for new message
+     * @param getState
+     * @param rejectWithValue
+     */
+    async ({ text }, { getState, rejectWithValue }) => {
+        try {
+            const state = getState();
+            return await API.sendMessage(state.chat.chat.id, text.trim(), state.user.jwtToken);
+        } catch (ex) {
+            return rejectWithValue('Opps there seems to be an error')
+        }
+    }
+);
+
+export const updateMessage = createAsyncThunk(
+    'updateMessage',
+    async (text, { getState, rejectWithValue }) => {
+        try {
+            const state = getState();
+            return await API.updateMessage(state.chat.editMode.messageId, text.trim(), state.user.jwtToken);
+        } catch (ex) {
+            return rejectWithValue('Opps there seems to be an error')
+        }
+    }
+);
+
+export const deleteMessage = createAsyncThunk(
+    'deleteMessage',
+    async ({ messageId }, { getState, rejectWithValue }) => {
+        try {
+            const stateChat = getState();
+            return await API.deleteMessage(messageId, stateChat.user.jwtToken);
+        } catch (ex) {
+            return rejectWithValue('Opps there seems to be an error')
+        }
+    }
+);
+
+
 const chatSlice = createSlice({
     name: nameOfSlice,
     initialState: {
         chats: [
             {
-                chatRoomId: "53d327cc-66b1-4ab5-ba26-8873d671b34a",
-                anotherUserId: "07f2fbe7-47ae-4d8e-94bf-05d7763f20c0",
-                userId: "07f2fbe7-47ae-4d8e-94bf-05d7763f20c0",
-                messageId: "930d9575-c75d-4524-b662-40ee535c3223",
-                text: "some massage2",
-                sentAt: "8d196f3c-877a-445e-9c9a-4723493ba088",
-                amountOfNotReadMessages: 0,
-                userInfo: null
+                "chatId": 2,
+                "anotherUserId": 2,
+                "userId": 3,
+                "name": "name",
+                "surname": "surname",
+                "messageId": 7,
+                "text": "А ти якк?",
+                "sentAt": [
+                    2022,
+                    5,
+                    9,
+                    17,
+                    19,
+                    0,
+                    594468000
+                ],
+                "amountNotReadMessages": 0
             }
         ],
-        messages: [],
+        chat: {
+            "id": 2,
+            "users": [
+                {
+                    "id": 3,
+                    "avatar": null,
+                    "name": "Вадім",
+                    "surname": "Скуратовський",
+                    "username": "vadim",
+                    "email": "vadim@gmail.com",
+                    "phone": "380958827299",
+                    "sex": "MALE"
+                },
+                {
+                    "id": 2,
+                    "avatar": null,
+                    "name": "Богдан",
+                    "surname": "Ткачук",
+                    "username": "pro100user",
+                    "email": "bogdan@gmail.com",
+                    "phone": "380972553991",
+                    "sex": "MALE"
+                }
+            ],
+            "messages": [
+                {
+                    "id": 2,
+                    "userId": 3,
+                    "chatId": 2,
+                    "text": "Привіт",
+                    "photo": null,
+                    "forwardId": null,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        17,
+                        0,
+                        594468000
+                    ],
+                    "readMessages": [
+                        2
+                    ],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 7,
+                    "userId": 3,
+                    "chatId": 2,
+                    "text": "А ти як?",
+                    "photo": null,
+                    "forwardId": 3,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        19,
+                        0,
+                        594468000
+                    ],
+                    "readMessages": [],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 6,
+                    "userId": 3,
+                    "chatId": 2,
+                    "text": "Все добре",
+                    "photo": null,
+                    "forwardId": 4,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        18,
+                        30,
+                        594468000
+                    ],
+                    "readMessages": [],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 3,
+                    "userId": 2,
+                    "chatId": 2,
+                    "text": "Шо робиш?",
+                    "photo": null,
+                    "forwardId": null,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        17,
+                        30,
+                        594468000
+                    ],
+                    "readMessages": [
+                        3
+                    ],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 4,
+                    "userId": 2,
+                    "chatId": 2,
+                    "text": "Як справи?",
+                    "photo": null,
+                    "forwardId": null,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        18,
+                        0,
+                        594468000
+                    ],
+                    "readMessages": [
+                        3
+                    ],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 1,
+                    "userId": 2,
+                    "chatId": 2,
+                    "text": "Привіт",
+                    "photo": null,
+                    "forwardId": null,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        16,
+                        30,
+                        594468000
+                    ],
+                    "readMessages": [
+                        3
+                    ],
+                    "likedMessages": [],
+                    "updated": false
+                },
+                {
+                    "id": 5,
+                    "userId": 3,
+                    "chatId": 2,
+                    "text": "Пишу проект",
+                    "photo": null,
+                    "forwardId": 3,
+                    "sentAt": [
+                        2022,
+                        5,
+                        9,
+                        17,
+                        18,
+                        30,
+                        594468000
+                    ],
+                    "readMessages": [
+                        2
+                    ],
+                    "likedMessages": [
+                        2
+                    ],
+                    "updated": false
+                }
+            ],
+        },
         selectedChat: {
             chatRoomId: ""
         },
@@ -115,7 +292,7 @@ const chatSlice = createSlice({
             state.editMode.messageId = payload.messageId;
         },
         setSelectedChat: (state, { payload }) => {
-            state.selectedChat.chatRoomId = payload;
+            state.selectedChat.chatId = payload;
         }
     },
     extraReducers: {
@@ -127,18 +304,6 @@ const chatSlice = createSlice({
             state.isLoadingChat = false;
         },
         [findChat.rejected]: (state, { payload }) => {
-            state.error = payload;
-            state.isLoadingChat = false;
-        },
-
-        [findMessages.pending]: (state) => {
-            state.isLoadingChat = true;
-        },
-        [findMessages.fulfilled]: (state, { payload }) => {
-            state.messages = payload;
-            state.isLoadingChat = false;
-        },
-        [findMessages.rejected]: (state, { payload }) => {
             state.error = payload;
             state.isLoadingChat = false;
         },
@@ -159,7 +324,7 @@ const chatSlice = createSlice({
             state.isLoadingChat = true;
         },
         [sendMessage.fulfilled]: (state, { payload }) => {
-            state.messages.push(payload);
+            state.chat.messages.push(payload);
             state.isLoadingChat = false;
         },
         [sendMessage.rejected]: (state, { payload }) => {
@@ -171,9 +336,9 @@ const chatSlice = createSlice({
             state.isLoadingChat = true;
         },
         [updateMessage.fulfilled]: (state, { payload }) => {
-            state.messages.forEach((m, index) => {
+            state.chat.messages.forEach((m, index) => {
                 if(m.id === payload.id) {
-                    state.messages[index] = payload;
+                    state.chat.messages[index] = payload;
                 }
             });
             state.isLoadingChat = false;
@@ -189,13 +354,12 @@ const chatSlice = createSlice({
         },
         [deleteMessage.fulfilled]: (state, { payload }) => {
             let index = -1;
-            console.log(payload)
-            state.messages.forEach((m, i) => {
+            state.chat.messages.forEach((m, i) => {
                 if(m.id === payload.id) {
                     index = i;
                 }
             });
-            state.messages.splice(index, 1);
+            state.chat.messages.splice(index, 1);
             state.isLoadingChat = false;
         },
         [deleteMessage.rejected]: (state, { payload }) => {

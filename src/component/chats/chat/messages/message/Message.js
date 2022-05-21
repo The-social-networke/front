@@ -22,7 +22,7 @@ import MyCustomContextMenu from "../../../../util/context_menu/ContextMenu";
 
 const Message = ({ id , text, sentAt, isEdited, isRead, isMe }) => {
     const dispatch = useDispatch();
-    const shortData = sentAt.substring(11, 16);
+    const shortData = `${sentAt[3]}:${sentAt[4]}`;
     const contextMenuItems = [
         {
             name: 'Copy',
