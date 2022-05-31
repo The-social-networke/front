@@ -19,7 +19,7 @@ export const DayMessageGroupContainer = styled.div`
   padding-left: 5px;
 `;
 
-export const DataContainer = styled.div`
+export const DateContainer = styled.div`
   top: 0;
   position: sticky;
   width: fit-content;

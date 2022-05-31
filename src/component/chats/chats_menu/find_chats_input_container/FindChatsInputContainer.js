@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 // Styles
 import {
     Wrapper,
@@ -13,7 +13,7 @@ import searchBlueImg from '../../../../image/searchBlue.png';
 import closeSearchGreyImg from '../../../../image/closeGrey.png';
 import closeSearchBlueImg from '../../../../image/closeBlue.png';
 
-const FindChatsInputContainer = ({isFocus, setFocus, text, setText}) => {
+const FindChatsInputContainer = ({isFocus, setFocus, text, setText, onTextChange}) => {
     return (
         <Wrapper>
             <Container isFocus={isFocus}>
@@ -23,6 +23,9 @@ const FindChatsInputContainer = ({isFocus, setFocus, text, setText}) => {
                     value={text}
                     onChange={(e) => {
                         setText(e.target.value);
+                        if(e.target.value !== '') {
+                            onTextChange(e.target.value);
+                        }
                     }}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setFocus(false)}

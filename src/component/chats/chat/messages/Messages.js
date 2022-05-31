@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from 'react';
 import {
     Avatar,
     Content,
-    DataContainer,
+    DateContainer,
     DayMessageGroupContainer,
     DayMessageGroupList,
     MessageGroup,
@@ -18,6 +18,7 @@ import {useSelector} from "react-redux";
 import Message from './message/Message';
 // Other
 import getDateForShow from "../../../util/getDateForShow";
+import timeUtil from "../../../util/timeUtil";
 
 
 const Messages = ({ messages }) => {
@@ -50,7 +51,6 @@ const Messages = ({ messages }) => {
 
     let dayGroupMessages = [];
     let tempDayMessagesGroup = {
-        year: '',
         date: '',
         groups: []
     }
@@ -63,11 +63,11 @@ const Messages = ({ messages }) => {
         if (tempMessagesGroup.messages !== []) {
             addGroupToGroupMessages();
         }
-        const date = tempDayMessagesGroup.date;
-        const year = tempDayMessagesGroup.year;
+        const date = timeUtil.toPrintDate(tempDayMessagesGroup.date[0], tempDayMessagesGroup.date[1], tempDayMessagesGroup.date[2]);
+        const fullDate = timeUtil.toPrintFullDate(tempDayMessagesGroup.date[0], tempDayMessagesGroup.date[1], tempDayMessagesGroup.date[2]);
         dayGroupMessages.push(
-            <DayMessageGroupContainer key={`day_messages_group_${year}:${date}`} id={`day_messages_group_${year}:${date}`}>
-                <DataContainer>{ date }</DataContainer>
+            <DayMessageGroupContainer key={`day_messages_group_${fullDate}`} id={`day_messages_group_${fullDate}`}>
+                <DateContainer>{ date }</DateContainer>
                 <DayMessageGroupList>
                     {tempDayMessagesGroup.groups}
                 </DayMessageGroupList>
@@ -111,16 +111,14 @@ const Messages = ({ messages }) => {
         tempMessagesGroup.messages = [];
     }
     if (messages.length !== 0) {
-        tempDayMessagesGroup.date = `${getDateForShow(messages[0].sentAt[1])}:${getDateForShow(messages[0].sentAt[2])}`;
-        tempDayMessagesGroup.year = messages[0].sentAt[0];
+        tempDayMessagesGroup.date = getMassDatesFromMass(messages[0]);
     }
     for (let i = 0; i <= messages.length; i++) {
         if (tempDayMessagesGroup.date && i < messages.length) {
-            if (tempDayMessagesGroup.date !== `${getDateForShow(messages[i].sentAt[1])}:${getDateForShow(messages[i].sentAt[2])}`) {
+            if (!isEqualsDateMass(tempDayMessagesGroup.date, getMassDatesFromMass(messages[i]))) {
                 addGroupMessagesToMonthGroupMessages();
             }
-            tempDayMessagesGroup.date = `${getDateForShow(messages[i].sentAt[1])}:${getDateForShow(messages[i].sentAt[2])}`;
-            tempDayMessagesGroup.year = messages[i].sentAt[0];
+            tempDayMessagesGroup.date = getMassDatesFromMass(messages[i]);
         }
         if (i < messages.length) {
             if(tempMessagesGroup.userId && tempMessagesGroup.userId !== messages[i].userId) {
@@ -130,9 +128,8 @@ const Messages = ({ messages }) => {
             tempMessagesGroup.userId = messages[i].userId;
         }
         else {
-            if (tempDayMessagesGroup.date === '') {
-                tempDayMessagesGroup.date = `${getDateForShow(messages[i - 1].sentAt[1])}:${getDateForShow(messages[i - 1].sentAt[2])}`;
-                tempDayMessagesGroup.year = messages[i-1].sentAt[0];
+            if (tempDayMessagesGroup.date.length === 0) {
+                tempDayMessagesGroup.date = getMassDatesFromMass(messages[i-1]);
             }
             addGroupMessagesToMonthGroupMessages();
         }
@@ -146,5 +143,13 @@ const Messages = ({ messages }) => {
         </Wrapper>
     )
 };
+
+let getMassDatesFromMass = (messageDate) => {
+    return [messageDate.sentAt[0], messageDate.sentAt[1], messageDate.sentAt[2]];
+}
+
+let isEqualsDateMass = (x, y) => {
+    return x[0] === y[0] && x[1] === y[1] && x[2] === y[2];
+}
 
 export default Messages;

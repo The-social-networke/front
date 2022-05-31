@@ -1,21 +1,28 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import API from "../../database/ChatAPI";
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+// API
+import ChatAPI from "../../database/ChatAPI";
+import UserAPI from "../../database/UserAPI";
 
 const nameOfSlice = 'chatSlice';
 
-export const findChat = createAsyncThunk(
-    'fetchChat',
-    async (chatId, { getState, rejectWithValue }) => {
+export const findUsers = createAsyncThunk(
+    'findUsers',
+    async (text, { getState, rejectWithValue }) => {
         try {
             const state = getState();
-            let chats = state.chat.chats;
-            let userId;
-            chats.forEach(c => {
-                if (c.chatId === Number(chatId)) {
-                    userId = c.anotherUserId;
-                }
-            })
-            return await API.findChat(userId, state.user.jwtToken);
+            return await UserAPI.findUsers(text, state.user.jwtToken);
+        } catch (ex) {
+            return rejectWithValue('Opps there seems to be an error')
+        }
+    }
+);
+
+export const findChat = createAsyncThunk(
+    'fetchChat',
+    async (anotherUserId, { getState, rejectWithValue }) => {
+        try {
+            const state = getState();
+            return await ChatAPI.findChat(anotherUserId, state.user.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -28,7 +35,7 @@ export const findChats = createAsyncThunk(
         try {
             console.log('find')
             const state = getState().user;
-            return await API.findChats(state.jwtToken);
+            return await ChatAPI.findChats(state.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -46,7 +53,7 @@ export const sendMessage = createAsyncThunk(
     async ({ text }, { getState, rejectWithValue }) => {
         try {
             const state = getState();
-            return await API.sendMessage(state.chat.chat.id, text.trim(), state.user.jwtToken);
+            return await ChatAPI.sendMessage(state.chat.chat.id, text.trim(), state.user.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -58,7 +65,7 @@ export const updateMessage = createAsyncThunk(
     async (text, { getState, rejectWithValue }) => {
         try {
             const state = getState();
-            return await API.updateMessage(state.chat.editMode.messageId, text.trim(), state.user.jwtToken);
+            return await ChatAPI.updateMessage(state.chat.editMode.messageId, text.trim(), state.user.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -70,7 +77,7 @@ export const deleteMessage = createAsyncThunk(
     async ({ messageId }, { getState, rejectWithValue }) => {
         try {
             const stateChat = getState();
-            return await API.deleteMessage(messageId, stateChat.user.jwtToken);
+            return await ChatAPI.deleteMessage(messageId, stateChat.user.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -82,7 +89,16 @@ const chatSlice = createSlice({
     name: nameOfSlice,
     initialState: {
         searchUsers: [
-
+            // {
+            //     id: 2,
+            //     avatar: '2avatar.jpg',
+            //     name: 'Богдан',
+            //     surname: 'Ткачук',
+            //     username: 'pro100user',
+            //     email: 'bogdan@gmail.com',
+            //     phone: '380972553991',
+            //     sex: 'MALE'
+            // }
         ],
         chats: [
             // {
@@ -151,141 +167,11 @@ const chatSlice = createSlice({
             //         ],
             //         "likedMessages": [],
             //         "updated": false
-            //     },
-            //     {
-            //         "id": 7,
-            //         "userId": 3,
-            //         "chatId": 2,
-            //         "text": "А ти як?",
-            //         "photo": null,
-            //         "forwardId": 3,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             19,
-            //             0,
-            //             594468000
-            //         ],
-            //         "readMessages": [],
-            //         "likedMessages": [],
-            //         "updated": false
-            //     },
-            //     {
-            //         "id": 6,
-            //         "userId": 3,
-            //         "chatId": 2,
-            //         "text": "Все добре",
-            //         "photo": null,
-            //         "forwardId": 4,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             18,
-            //             30,
-            //             594468000
-            //         ],
-            //         "readMessages": [],
-            //         "likedMessages": [],
-            //         "updated": false
-            //     },
-            //     {
-            //         "id": 3,
-            //         "userId": 2,
-            //         "chatId": 2,
-            //         "text": "Шо робиш?",
-            //         "photo": null,
-            //         "forwardId": null,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             17,
-            //             30,
-            //             594468000
-            //         ],
-            //         "readMessages": [
-            //             3
-            //         ],
-            //         "likedMessages": [],
-            //         "updated": false
-            //     },
-            //     {
-            //         "id": 4,
-            //         "userId": 2,
-            //         "chatId": 2,
-            //         "text": "Як справи?",
-            //         "photo": null,
-            //         "forwardId": null,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             18,
-            //             0,
-            //             594468000
-            //         ],
-            //         "readMessages": [
-            //             3
-            //         ],
-            //         "likedMessages": [],
-            //         "updated": false
-            //     },
-            //     {
-            //         "id": 1,
-            //         "userId": 2,
-            //         "chatId": 2,
-            //         "text": "Привіт",
-            //         "photo": null,
-            //         "forwardId": null,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             16,
-            //             30,
-            //             594468000
-            //         ],
-            //         "readMessages": [
-            //             3
-            //         ],
-            //         "likedMessages": [],
-            //         "updated": false
-            //     },
-            //     {
-            //         "id": 5,
-            //         "userId": 3,
-            //         "chatId": 2,
-            //         "text": "Пишу проект",
-            //         "photo": null,
-            //         "forwardId": 3,
-            //         "sentAt": [
-            //             2022,
-            //             5,
-            //             9,
-            //             17,
-            //             18,
-            //             30,
-            //             594468000
-            //         ],
-            //         "readMessages": [
-            //             2
-            //         ],
-            //         "likedMessages": [
-            //             2
-            //         ],
-            //         "updated": false
             //     }
             // ],
         },
         selectedChat: {
-            chatRoomId: ""
+            anotherUserId: ""
         },
         editMode: {
             isEdit: false,
@@ -302,7 +188,7 @@ const chatSlice = createSlice({
             state.editMode.messageId = payload.messageId;
         },
         setSelectedChat: (state, { payload }) => {
-            state.selectedChat.chatId = payload;
+            state.selectedChat.anotherUserId = payload;
         }
     },
     extraReducers: {
@@ -376,7 +262,19 @@ const chatSlice = createSlice({
             console.log(payload)
             state.error = payload;
             state.isLoadingChat = false;
-        }
+        },
+
+        [findUsers.pending]: (state) => {
+            state.isLoadingChat = true;
+        },
+        [findUsers.fulfilled]: (state, { payload }) => {
+            state.searchUsers = payload;
+            state.isLoadingChat = false;
+        },
+        [findUsers.rejected]: (state, { payload }) => {
+            state.error = payload;
+            state.isLoadingChat = false;
+        },
     }
 });
 

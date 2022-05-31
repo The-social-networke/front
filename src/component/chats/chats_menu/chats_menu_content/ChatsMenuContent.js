@@ -1,4 +1,5 @@
 import React from 'react';
+// Styles
 import {
     ChatBox,
     ChatBoxAvatar, ChatBoxExtra,
@@ -7,15 +8,21 @@ import {
     ChatBoxTextLastMessageText,
     ListChatsContent, ListChatsContentTitle
 } from "../../Chats.styles";
+//Redux
 import { setSelectedChat } from "../../../../redux/slice/chatSlice";
+// Router
 import { Link } from "react-router-dom";
+// Image
 import noAvatarImg from "../../../../image/noImage.svg";
-import getDateForShow from "../../../util/getDateForShow";
+// Other
+// import getDateForShow from "../../../util/getDateForShow";
+import timeUtil from "../../../util/timeUtil";
 
-let ChatsMenuContent = ({chatState, dispatch, text}) => {
+let ChatsMenuContent = ({chatState, dispatch, text, searchUsers}) => {
     let isChatFound = false;
+    let isUserFound = false;
 
-    let content = chatState.chats.map(chat => {
+    let foundChats = chatState.chats.map(chat => {
         if (text !== '') {
             if (!(chat.name.toLowerCase().includes(text.toLowerCase())
                 || chat.surname.toLowerCase().includes(text.toLowerCase()))) {
@@ -24,34 +31,66 @@ let ChatsMenuContent = ({chatState, dispatch, text}) => {
         }
         isChatFound = true;
         let changeSelectedChat = () => {
-            dispatch(setSelectedChat(chat.chatId));
+            dispatch(setSelectedChat(chat.anotherUserId));
         }
-        let isSelected = chatState.selectedChat.chatId === chat.chatId;
+        let isSelected = chatState.selectedChat.anotherUserId === chat.anotherUserId;
         if (chat.text != null) {
             return (
                 <Link
-                    key={chat.chatId}
-                    to={'/chat/' + chat.chatId}
+                    key={chat.anotherUserId + '_found'}
+                    to={'/chat/' + chat.anotherUserId}
                     onClick={changeSelectedChat}>
                     <ChatBox selected={isSelected}>
                         <ChatBoxAvatar backgroundImg={chat.avatar ? "http://localhost:8081/avatars/" + chat.avatar : noAvatarImg}/>
                         <ChatBoxText>
                             <ChatBoxTextChatName selected={isSelected}>
-                                {`${chat.name} ${chat.surname}`}
+                                { `${chat.name} ${chat.surname}` }
                             </ChatBoxTextChatName>
                             <ChatBoxTextLastMessageText selected={isSelected}>
-                                {chat.text}
+                                { chat.text }
                             </ChatBoxTextLastMessageText>
                         </ChatBoxText>
                         <ChatBoxExtra selected={isSelected}>
                             {
-                                `${getDateForShow(chat.sentAt[3])}:${getDateForShow(chat.sentAt[4])}`
+                                `${timeUtil.toPrintDateTime(chat.sentAt[0], chat.sentAt[1], chat.sentAt[2], chat.sentAt[3], chat.sentAt[4])}`
                             }
                         </ChatBoxExtra>
                     </ChatBox>
                 </Link>
             )
         }
+    });
+
+    let foundUsers = searchUsers.map(user => {
+        if (text === '') {
+            return <></>;
+        }
+        isUserFound = true;
+        let changeSelectedChat = () => {
+            dispatch(setSelectedChat(user.anotherUserId));
+        }
+        let isSelected = chatState.selectedChat.anotherUserId === user.id;
+        return (
+            <Link
+                key={user.id + '_user'}
+                to={'/chat/' + user.id}
+                onClick={changeSelectedChat}>
+                <ChatBox selected={isSelected}>
+                    <ChatBoxAvatar backgroundImg={user.avatar ? "http://localhost:8081/avatars/" + user.avatar : noAvatarImg}/>
+                    <ChatBoxText>
+                        <ChatBoxTextChatName selected={isSelected}>
+                            {`${user.name} ${user.surname}`}
+                        </ChatBoxTextChatName>
+                        <ChatBoxTextLastMessageText selected={isSelected}>
+                            {user.email}
+                        </ChatBoxTextLastMessageText>
+                    </ChatBoxText>
+                    <ChatBoxExtra selected={isSelected}>
+                        { user.sex }
+                    </ChatBoxExtra>
+                </ChatBox>
+            </Link>
+        )
     });
 
 
@@ -64,7 +103,15 @@ let ChatsMenuContent = ({chatState, dispatch, text}) => {
                 </ListChatsContentTitle>
                     : ''
             }
-            { content }
+            { foundChats }
+            {
+                isUserFound && text !== '' ?
+                <ListChatsContentTitle>
+                    Found users
+                </ListChatsContentTitle>
+                : ''
+            }
+            { foundUsers }
         </ListChatsContent>
     )
 }

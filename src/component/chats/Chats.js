@@ -22,7 +22,7 @@ import noAvatarImg from '../../image/noImage.svg';
 // Routing
 import { Link, useParams } from "react-router-dom";
 // Redux
-import { findChat, findChats, setSelectedChat } from "../../redux/slice/chatSlice";
+import { findChat, findChats, findUsers, setSelectedChat } from "../../redux/slice/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
 // Components
 import Chat from "./chat/Chat";
@@ -30,23 +30,27 @@ import FindChatsInputContainer from "./chats_menu/find_chats_input_container/Fin
 import ChatsMenuContent from "./chats_menu/chats_menu_content/ChatsMenuContent";
 
 const Chats = () => {
-    const chatUrlId = useParams();
+    const chatAnotherUserUrlId = useParams()['*'];
     const dispatch = useDispatch();
     const chatState = useSelector(state => state.chat);
 
     useLayoutEffect(() => {
         dispatch(findChats())
             .then(() => {
-                if (chatUrlId['*'] !== '') {
-                    dispatch(findChat(chatUrlId['*']))
-                    dispatch(setSelectedChat(parseInt(chatUrlId['*'])));
+                if (chatAnotherUserUrlId !== '') {
+                    dispatch(findChat(chatAnotherUserUrlId))
+                    dispatch(setSelectedChat(parseInt(chatAnotherUserUrlId)));
                 }
             });
-    }, [dispatch, chatUrlId])
+    }, [dispatch, chatAnotherUserUrlId]);
 
     //find chants mode
     const [isFocus, setFocus] = useState(false);
     const [text, setText] = useState('');
+
+    let onTextChange = (text) => {
+        dispatch(findUsers(text));
+    };
 
     return (
         <Wrapper id='chats'>
@@ -57,16 +61,18 @@ const Chats = () => {
                         setFocus={setFocus}
                         text={text}
                         setText={setText}
+                        onTextChange={onTextChange}
                     />
                 </ListChatsHeader>
                 <ChatsMenuContent
                     chatState={chatState}
                     dispatch={dispatch}
                     text={text}
+                    searchUsers={chatState.searchUsers}
                 />
             </ListChatsContainer>
             <ChatContainer>
-                {chatUrlId['*'] !== '' && <Chat messages={chatState.chat.messages}/>}
+                {chatAnotherUserUrlId !== '' && <Chat messages={chatState.chat.messages}/>}
             </ChatContainer>
             <ChatContainerBackground id='background_chat'>
                 <ChatContainerBackgroundImg backgroundImg={backgroundChatImg}/>
