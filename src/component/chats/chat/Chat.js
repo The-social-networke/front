@@ -13,9 +13,9 @@ import Messages from "./messages/Messages";
 const Chat = ({ messages }) => {
     return (
         <Wrapper id='chat'>
-            <ChatInfoContainer>
-                info about chat
-            </ChatInfoContainer>
+            {/*<ChatInfoContainer>*/}
+            {/*    info about chat*/}
+            {/*</ChatInfoContainer>*/}
             <MessagesContainer>
                 <Messages messages={messages}/>
             </MessagesContainer>

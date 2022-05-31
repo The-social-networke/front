@@ -20,6 +20,8 @@ export const DayMessageGroupContainer = styled.div`
 `;
 
 export const DataContainer = styled.div`
+  top: 0;
+  position: sticky;
   width: fit-content;
   border-radius: 10px;
   box-shadow: var(--box-shadow-standart);
@@ -51,7 +53,9 @@ export const MessageList = styled.div`
 
 export const Avatar = styled.div`
   content: '';
-  background: url(${props => props.url});
+  background-image: url(${props => props.url});
+  background-size: cover;
+  border-radius: 50%;
   min-width: 40px;
   min-height: 40px;
   max-width: 40px;

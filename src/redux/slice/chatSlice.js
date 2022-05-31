@@ -5,10 +5,17 @@ const nameOfSlice = 'chatSlice';
 
 export const findChat = createAsyncThunk(
     'fetchChat',
-    async (userId, { getState, rejectWithValue }) => {
+    async (chatId, { getState, rejectWithValue }) => {
         try {
-            const state = getState().user;
-            return await API.findChat(userId, state.jwtToken);
+            const state = getState();
+            let chats = state.chat.chats;
+            let userId;
+            chats.forEach(c => {
+                if (c.chatId === Number(chatId)) {
+                    userId = c.anotherUserId;
+                }
+            })
+            return await API.findChat(userId, state.user.jwtToken);
         } catch (ex) {
             return rejectWithValue('Opps there seems to be an error')
         }
@@ -75,204 +82,204 @@ const chatSlice = createSlice({
     name: nameOfSlice,
     initialState: {
         chats: [
-            {
-                "chatId": 2,
-                "anotherUserId": 2,
-                "userId": 3,
-                "name": "name",
-                "surname": "surname",
-                "messageId": 7,
-                "text": "А ти якк?",
-                "sentAt": [
-                    2022,
-                    5,
-                    9,
-                    17,
-                    19,
-                    0,
-                    594468000
-                ],
-                "amountNotReadMessages": 0
-            }
+            // {
+            //     "chatId": 2,
+            //     "anotherUserId": 2,
+            //     "userId": 3,
+            //     "name": "name",
+            //     "surname": "surname",
+            //     "messageId": 7,
+            //     "text": "А ти якк?",
+            //     "sentAt": [
+            //         2022,
+            //         5,
+            //         9,
+            //         17,
+            //         19,
+            //         0,
+            //         594468000
+            //     ],
+            //     "amountNotReadMessages": 0
+            // }
         ],
         chat: {
-            "id": 2,
-            "users": [
-                {
-                    "id": 3,
-                    "avatar": null,
-                    "name": "Вадім",
-                    "surname": "Скуратовський",
-                    "username": "vadim",
-                    "email": "vadim@gmail.com",
-                    "phone": "380958827299",
-                    "sex": "MALE"
-                },
-                {
-                    "id": 2,
-                    "avatar": null,
-                    "name": "Богдан",
-                    "surname": "Ткачук",
-                    "username": "pro100user",
-                    "email": "bogdan@gmail.com",
-                    "phone": "380972553991",
-                    "sex": "MALE"
-                }
-            ],
-            "messages": [
-                {
-                    "id": 2,
-                    "userId": 3,
-                    "chatId": 2,
-                    "text": "Привіт",
-                    "photo": null,
-                    "forwardId": null,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        17,
-                        0,
-                        594468000
-                    ],
-                    "readMessages": [
-                        2
-                    ],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 7,
-                    "userId": 3,
-                    "chatId": 2,
-                    "text": "А ти як?",
-                    "photo": null,
-                    "forwardId": 3,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        19,
-                        0,
-                        594468000
-                    ],
-                    "readMessages": [],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 6,
-                    "userId": 3,
-                    "chatId": 2,
-                    "text": "Все добре",
-                    "photo": null,
-                    "forwardId": 4,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        18,
-                        30,
-                        594468000
-                    ],
-                    "readMessages": [],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 3,
-                    "userId": 2,
-                    "chatId": 2,
-                    "text": "Шо робиш?",
-                    "photo": null,
-                    "forwardId": null,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        17,
-                        30,
-                        594468000
-                    ],
-                    "readMessages": [
-                        3
-                    ],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 4,
-                    "userId": 2,
-                    "chatId": 2,
-                    "text": "Як справи?",
-                    "photo": null,
-                    "forwardId": null,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        18,
-                        0,
-                        594468000
-                    ],
-                    "readMessages": [
-                        3
-                    ],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 1,
-                    "userId": 2,
-                    "chatId": 2,
-                    "text": "Привіт",
-                    "photo": null,
-                    "forwardId": null,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        16,
-                        30,
-                        594468000
-                    ],
-                    "readMessages": [
-                        3
-                    ],
-                    "likedMessages": [],
-                    "updated": false
-                },
-                {
-                    "id": 5,
-                    "userId": 3,
-                    "chatId": 2,
-                    "text": "Пишу проект",
-                    "photo": null,
-                    "forwardId": 3,
-                    "sentAt": [
-                        2022,
-                        5,
-                        9,
-                        17,
-                        18,
-                        30,
-                        594468000
-                    ],
-                    "readMessages": [
-                        2
-                    ],
-                    "likedMessages": [
-                        2
-                    ],
-                    "updated": false
-                }
-            ],
+            // "id": 2,
+            // "users": [
+            //     {
+            //         "id": 3,
+            //         "avatar": null,
+            //         "name": "Вадім",
+            //         "surname": "Скуратовський",
+            //         "username": "vadim",
+            //         "email": "vadim@gmail.com",
+            //         "phone": "380958827299",
+            //         "sex": "MALE"
+            //     },
+            //     {
+            //         "id": 2,
+            //         "avatar": null,
+            //         "name": "Богдан",
+            //         "surname": "Ткачук",
+            //         "username": "pro100user",
+            //         "email": "bogdan@gmail.com",
+            //         "phone": "380972553991",
+            //         "sex": "MALE"
+            //     }
+            // ],
+            // "messages": [
+            //     {
+            //         "id": 2,
+            //         "userId": 3,
+            //         "chatId": 2,
+            //         "text": "Привіт",
+            //         "photo": null,
+            //         "forwardId": null,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             17,
+            //             0,
+            //             594468000
+            //         ],
+            //         "readMessages": [
+            //             2
+            //         ],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 7,
+            //         "userId": 3,
+            //         "chatId": 2,
+            //         "text": "А ти як?",
+            //         "photo": null,
+            //         "forwardId": 3,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             19,
+            //             0,
+            //             594468000
+            //         ],
+            //         "readMessages": [],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 6,
+            //         "userId": 3,
+            //         "chatId": 2,
+            //         "text": "Все добре",
+            //         "photo": null,
+            //         "forwardId": 4,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             18,
+            //             30,
+            //             594468000
+            //         ],
+            //         "readMessages": [],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 3,
+            //         "userId": 2,
+            //         "chatId": 2,
+            //         "text": "Шо робиш?",
+            //         "photo": null,
+            //         "forwardId": null,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             17,
+            //             30,
+            //             594468000
+            //         ],
+            //         "readMessages": [
+            //             3
+            //         ],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 4,
+            //         "userId": 2,
+            //         "chatId": 2,
+            //         "text": "Як справи?",
+            //         "photo": null,
+            //         "forwardId": null,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             18,
+            //             0,
+            //             594468000
+            //         ],
+            //         "readMessages": [
+            //             3
+            //         ],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 1,
+            //         "userId": 2,
+            //         "chatId": 2,
+            //         "text": "Привіт",
+            //         "photo": null,
+            //         "forwardId": null,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             16,
+            //             30,
+            //             594468000
+            //         ],
+            //         "readMessages": [
+            //             3
+            //         ],
+            //         "likedMessages": [],
+            //         "updated": false
+            //     },
+            //     {
+            //         "id": 5,
+            //         "userId": 3,
+            //         "chatId": 2,
+            //         "text": "Пишу проект",
+            //         "photo": null,
+            //         "forwardId": 3,
+            //         "sentAt": [
+            //             2022,
+            //             5,
+            //             9,
+            //             17,
+            //             18,
+            //             30,
+            //             594468000
+            //         ],
+            //         "readMessages": [
+            //             2
+            //         ],
+            //         "likedMessages": [
+            //             2
+            //         ],
+            //         "updated": false
+            //     }
+            // ],
         },
         selectedChat: {
             chatRoomId: ""

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 export const Wrapper = styled.div`
   display: flex;
@@ -30,6 +30,7 @@ export const ListChatsContainer = styled.div`
 export const ListChatsHeader = styled.div`
   padding: 10px;
   flex: 0;
+  height: fit-content;
 `;
 
 export const ListChatsContent = styled.div`
@@ -42,6 +43,11 @@ export const ListChatsContent = styled.div`
     color: black;
     text-decoration: none;
   }
+`;
+
+export const ListChatsContentTitle = styled.div`
+  padding: 5px;
+  color: var(--grey);
 `;
 
 export const ChatBox = styled.div`
@@ -57,7 +63,9 @@ export const ChatBox = styled.div`
 `;
 
 export const ChatBoxAvatar = styled.div`
-  background: url(${props => props.backgroundImg});
+  background-image: url(${props => props.backgroundImg});
+  background-size: cover;
+  border-radius: 50%;
   min-width: 40px;
   min-height: 40px;
   max-width: 40px;

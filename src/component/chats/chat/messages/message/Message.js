@@ -19,10 +19,12 @@ import { useDispatch } from "react-redux";
 import { deleteMessage, setEditMode } from "../../../../../redux/slice/chatSlice";
 // Components
 import MyCustomContextMenu from "../../../../util/context_menu/ContextMenu";
+// Other
+import getDateForShow from "../../../../util/getDateForShow";
 
 const Message = ({ id , text, sentAt, isEdited, isRead, isMe }) => {
     const dispatch = useDispatch();
-    const shortData = `${sentAt[3]}:${sentAt[4]}`;
+    const shortData = `${getDateForShow(sentAt[3])}:${getDateForShow(sentAt[4])}`;
     const contextMenuItems = [
         {
             name: 'Copy',
