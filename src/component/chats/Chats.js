@@ -28,8 +28,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Chat from "./chat/Chat";
 import FindChatsInputContainer from "./chats_menu/find_chats_input_container/FindChatsInputContainer";
 import ChatsMenuContent from "./chats_menu/chats_menu_content/ChatsMenuContent";
-// Other
-import getDateForShow from "../util/getDateForShow";
 
 const Chats = () => {
     const chatUrlId = useParams();
@@ -45,13 +43,6 @@ const Chats = () => {
                 }
             });
     }, [dispatch, chatUrlId])
-
-    // useEffect(() => {
-    //     if (chatUrlId['*'] !== '') {
-    //         dispatch(findChat(chatUrlId['*']))
-    //         dispatch(setSelectedChat(parseInt(chatUrlId['*'])));
-    //     }
-    // }, [chatUrlId]);
 
     //find chants mode
     const [isFocus, setFocus] = useState(false);

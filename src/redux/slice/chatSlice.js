@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import API from "../../API";
+import API from "../../database/ChatAPI";
 
 const nameOfSlice = 'chatSlice';
 
@@ -81,6 +81,9 @@ export const deleteMessage = createAsyncThunk(
 const chatSlice = createSlice({
     name: nameOfSlice,
     initialState: {
+        searchUsers: [
+
+        ],
         chats: [
             // {
             //     "chatId": 2,

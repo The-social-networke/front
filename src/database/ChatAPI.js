@@ -6,7 +6,7 @@ const SEND_MESSAGE = `/chats/sendMessage`;
 const DELETE_MESSAGE = `/chats/deleteMessage`;
 const UPDATE_MESSAGE = `/chats/updateMessage`;
 
-const apiSettings = {
+const ChatAPI = {
     findChat: async (anotherUserId, jwtToken) => {
         const endpoint = BASE_URL + GET_CHAT + "";
         return await (await fetch(endpoint, {
@@ -71,4 +71,4 @@ const apiSettings = {
     }
 }
 
-export default apiSettings;
+export default ChatAPI;

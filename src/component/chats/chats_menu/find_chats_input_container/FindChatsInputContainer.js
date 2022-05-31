@@ -13,15 +13,7 @@ import searchBlueImg from '../../../../image/searchBlue.png';
 import closeSearchGreyImg from '../../../../image/closeGrey.png';
 import closeSearchBlueImg from '../../../../image/closeBlue.png';
 
-const FindChatsInputContainer = ({isFocus, setFocus, text, setText, changeSearchContext}) => {
-    let [isFunctionReady, setFunctionReady] = useState(false);
-    let timeout;
-    let initTimeout = () => {
-        timeout = setTimeout(() => {
-            setFunctionReady(false);
-        }, 2000);
-    }
-
+const FindChatsInputContainer = ({isFocus, setFocus, text, setText}) => {
     return (
         <Wrapper>
             <Container isFocus={isFocus}>
@@ -31,10 +23,6 @@ const FindChatsInputContainer = ({isFocus, setFocus, text, setText, changeSearch
                     value={text}
                     onChange={(e) => {
                         setText(e.target.value);
-                        if (!isFunctionReady) {
-                            initTimeout();
-                            setFunctionReady(true);
-                        }
                     }}
                     onFocus={() => setFocus(true)}
                     onBlur={() => setFocus(false)}

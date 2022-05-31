@@ -13,7 +13,7 @@ const apiSettings = {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userCreate)
-        })).body;
+        })).json();
     },
     getUser: async (jwtToken) => {
         console.log(jwtToken)

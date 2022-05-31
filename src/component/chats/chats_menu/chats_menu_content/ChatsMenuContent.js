@@ -13,6 +13,7 @@ import noAvatarImg from "../../../../image/noImage.svg";
 import getDateForShow from "../../../util/getDateForShow";
 
 let ChatsMenuContent = ({chatState, dispatch, text}) => {
+    let isChatFound = false;
 
     let content = chatState.chats.map(chat => {
         if (text !== '') {
@@ -21,6 +22,7 @@ let ChatsMenuContent = ({chatState, dispatch, text}) => {
                 return <></>;
             }
         }
+        isChatFound = true;
         let changeSelectedChat = () => {
             dispatch(setSelectedChat(chat.chatId));
         }
@@ -55,9 +57,13 @@ let ChatsMenuContent = ({chatState, dispatch, text}) => {
 
     return (
         <ListChatsContent>
-            <ListChatsContentTitle>
-                Found chats
-            </ListChatsContentTitle>
+            {
+                isChatFound && text !== '' ?
+                <ListChatsContentTitle>
+                    Found chats
+                </ListChatsContentTitle>
+                    : ''
+            }
             { content }
         </ListChatsContent>
     )
