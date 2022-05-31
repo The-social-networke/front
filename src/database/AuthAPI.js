@@ -18,7 +18,7 @@ const apiSettings = {
     getUser: async (jwtToken) => {
         console.log(jwtToken)
         const endpoint = BASE_URL + PROFILE;
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ const UPDATE_MESSAGE = `/chats/updateMessage`;
 const ChatAPI = {
     findChat: async (anotherUserId, jwtToken) => {
         const endpoint = BASE_URL + GET_CHAT + "";
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -20,7 +20,7 @@ const ChatAPI = {
     },
     findChats: async (jwtToken) => {
         const endpoint = BASE_URL + GET_CHATS + "";
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ const ChatAPI = {
     },
     sendMessage: async (chatId, text, jwtToken) => {
         const endpoint = BASE_URL + SEND_MESSAGE + "";
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const ChatAPI = {
     },
     updateMessage: async (messageId, text, jwtToken) => {
         const endpoint = BASE_URL + UPDATE_MESSAGE + "";
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const ChatAPI = {
     },
     deleteMessage: async (messageId, jwtToken) => {
         const endpoint = BASE_URL + DELETE_MESSAGE + "";
-        return await (await fetch(endpoint, {
+        return (await fetch(endpoint, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
