@@ -64,8 +64,10 @@ const userSlice = createSlice({
                 state.validation = exceptionsCodes(payload.errorCode);
             }
             else {
+                state.validation = '';
                 state.jwtToken = payload.jwtToken;
             }
+
             state.isLoadingLogin = false;
         },
         [login.rejected]: (state, {payload}) => {
