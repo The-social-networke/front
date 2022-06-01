@@ -2,25 +2,16 @@ import React, {useEffect, useLayoutEffect, useState} from 'react';
 // Styles
 import {
     Wrapper,
-    ChatBox,
-    ChatBoxAvatar,
-    ChatBoxText,
-    ChatBoxTextChatName,
-    ChatBoxTextLastMessageText,
-    ChatBoxExtra,
     ListChatsContainer,
     ListChatsHeader,
-    ListChatsContent,
-    ListChatsContentTitle,
     ChatContainer,
     ChatContainerBackground,
     ChatContainerBackgroundImg
 } from './Chats.styles';
 // Images
 import backgroundChatImg from '../../image/backgroundChat.png';
-import noAvatarImg from '../../image/noImage.svg';
 // Routing
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 // Redux
 import { findChat, findChats, findUsers, setSelectedChat } from "../../redux/slice/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,28 +19,33 @@ import { useDispatch, useSelector } from "react-redux";
 import Chat from "./chat/Chat";
 import FindChatsInputContainer from "./chats_menu/find_chats_input_container/FindChatsInputContainer";
 import ChatsMenuContent from "./chats_menu/chats_menu_content/ChatsMenuContent";
+import Background from "../custom/background/Background";
 
 const Chats = () => {
     const chatAnotherUserUrlId = useParams()['*'];
     const dispatch = useDispatch();
     const chatState = useSelector(state => state.chat);
+    const meId = useSelector(state => state.user.user.id);
 
     useLayoutEffect(() => {
-        dispatch(findChats())
-            .then(() => {
-                if (chatAnotherUserUrlId !== '') {
-                    dispatch(findChat(chatAnotherUserUrlId))
+        if (chatAnotherUserUrlId !== '') {
+            dispatch(findChat(chatAnotherUserUrlId))
+                .then(() => {
+                    dispatch(findChats());
                     dispatch(setSelectedChat(parseInt(chatAnotherUserUrlId)));
-                }
-            });
+                });
+        }
+        else {
+            dispatch(findChats());
+        }
     }, [dispatch, chatAnotherUserUrlId]);
 
     //find chants mode
     const [isFocus, setFocus] = useState(false);
     const [text, setText] = useState('');
 
-    let onTextChange = (text) => {
-        dispatch(findUsers(text));
+    let onTextChange = (x) => {
+        dispatch(findUsers(x));
     };
 
     return (
@@ -67,6 +63,7 @@ const Chats = () => {
                 <ChatsMenuContent
                     chatState={chatState}
                     dispatch={dispatch}
+                    meId={meId}
                     text={text}
                     searchUsers={chatState.searchUsers}
                 />
@@ -74,9 +71,7 @@ const Chats = () => {
             <ChatContainer>
                 {chatAnotherUserUrlId !== '' && <Chat messages={chatState.chat.messages}/>}
             </ChatContainer>
-            <ChatContainerBackground id='background_chat'>
-                <ChatContainerBackgroundImg backgroundImg={backgroundChatImg}/>
-            </ChatContainerBackground>
+            <Background />
         </Wrapper>
     );
 }

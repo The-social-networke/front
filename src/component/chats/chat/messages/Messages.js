@@ -90,7 +90,7 @@ const Messages = ({ messages }) => {
                             id={m.id}
                             text={m.text}
                             sentAt={m.sentAt}
-                            isEdited={m.updated}
+                            isEdited={m.isUpdated}
                             isMe={false} />))
                         }
                     </MessageList>
@@ -100,7 +100,7 @@ const Messages = ({ messages }) => {
                             id={m.id}
                             text={m.text}
                             sentAt={m.sentAt}
-                            isEdited={m.updated}
+                            isEdited={m.isUpdated}
                             isRead={m.readMessages.length !== 0}
                             isMe={true} />)) }
                     </MessageList>

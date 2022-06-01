@@ -10,10 +10,9 @@ import { Content, Wrapper } from "./App.styles";
 // Components
 import Header from './component/header/Header';
 import Footer from './component/footer/Footer';
-import Custom from './component/custom/Custom';
 import Chats from "./component/chats/Chats";
 import Login from "./component/auth/login/Login";
-import {Spinner} from "./component/util/spiner/Spiner.styles";
+import Profile from "./component/profile/Profile";
 
 function App() {
     return (
@@ -24,10 +23,10 @@ function App() {
                         <Header />
                         <Content>
                             <Routes>
-                                <Route path='/custom' element={<Custom />} />
+                                <Route path='/profile' element={<Profile />} />
                                 <Route path='/chat/*' element={<Chats />} />
                                 <Route path='/login' element={<Login />} />
-                                <Route path='/' element={<Spinner />} />
+                                <Route path='/' element={<Profile />} />
                             </Routes>
                         </Content>
                         <Footer />

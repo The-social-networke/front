@@ -33,7 +33,7 @@ export const initUser = createAsyncThunk(
 const userSlice = createSlice({
     name: nameOfSlice,
     initialState: {
-        jwtToken: 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpZCI6MywiZXhwIjoxNjU1MjQwNDAwLCJlbWFpbCI6InZhZGltQGdtYWlsLmNvbSIsImVuYWJsZWQiOnRydWV9.N5u9WuAW48ncnN7vXGk_OkRrLmRUiAhFgGoJq701vOydJYqScZ2eei2etAs0V5I8FFAuv08PZssSjpEyXsZhPw',
+        jwtToken: 'eyJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJpZCI6MywiZXhwIjoxNjU1MzI2ODAwLCJlbWFpbCI6InZhZGltQGdtYWlsLmNvbSIsImVuYWJsZWQiOnRydWV9.LsxKcdlYa0BHjQUK1ExjQpB6QrTAx0T5YGDTkb3dvZuPvEnIlwGV040Anws_IRXa_OCv12dj5KSXIQsSpCDSmA',
         user: {
             "id": 3,
             "avatar": null,
@@ -49,10 +49,12 @@ const userSlice = createSlice({
         validation: ''
     },
     reducers: {
-        setLogin: (state, action) => {
-            const { jwtToken, user } = action.payload;
-            state.jwtToken = jwtToken;
-            state.user = user;
+        logout: (state) => {
+            state.jwtToken = '';
+            state.user = {};
+        },
+        clearValidation: (state) => {
+            state.validation = "";
         },
     },
     extraReducers: {
@@ -89,5 +91,5 @@ const userSlice = createSlice({
     }
     });
 
-export const { setLogin } = userSlice.actions;
+export const { logout, clearValidation } = userSlice.actions;
 export default userSlice.reducer;

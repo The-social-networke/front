@@ -2,12 +2,14 @@ import React from 'react';
 // Styles
 import {
     ChatBox,
-    ChatBoxAvatar, ChatBoxExtra,
+    ChatBoxAvatar,
+    ChatBoxExtra,
     ChatBoxText,
     ChatBoxTextChatName,
     ChatBoxTextLastMessageText,
-    ListChatsContent, ListChatsContentTitle
-} from "../../Chats.styles";
+    ListChatsContent,
+    ListChatsContentTitle
+} from "./ChatsMenuContent.styles";
 //Redux
 import { setSelectedChat } from "../../../../redux/slice/chatSlice";
 // Router
@@ -15,10 +17,9 @@ import { Link } from "react-router-dom";
 // Image
 import noAvatarImg from "../../../../image/noImage.svg";
 // Other
-// import getDateForShow from "../../../util/getDateForShow";
 import timeUtil from "../../../util/timeUtil";
 
-let ChatsMenuContent = ({chatState, dispatch, text, searchUsers}) => {
+let ChatsMenuContent = ({chatState, dispatch, meId, text, searchUsers}) => {
     let isChatFound = false;
     let isUserFound = false;
 
@@ -34,31 +35,30 @@ let ChatsMenuContent = ({chatState, dispatch, text, searchUsers}) => {
             dispatch(setSelectedChat(chat.anotherUserId));
         }
         let isSelected = chatState.selectedChat.anotherUserId === chat.anotherUserId;
-        if (chat.text != null) {
-            return (
-                <Link
-                    key={chat.anotherUserId + '_found'}
-                    to={'/chat/' + chat.anotherUserId}
-                    onClick={changeSelectedChat}>
-                    <ChatBox selected={isSelected}>
-                        <ChatBoxAvatar backgroundImg={chat.avatar ? "http://localhost:8081/avatars/" + chat.avatar : noAvatarImg}/>
-                        <ChatBoxText>
-                            <ChatBoxTextChatName selected={isSelected}>
-                                { `${chat.name} ${chat.surname}` }
-                            </ChatBoxTextChatName>
-                            <ChatBoxTextLastMessageText selected={isSelected}>
-                                { chat.text }
-                            </ChatBoxTextLastMessageText>
-                        </ChatBoxText>
-                        <ChatBoxExtra selected={isSelected}>
-                            {
-                                `${timeUtil.toPrintDateTime(chat.sentAt[0], chat.sentAt[1], chat.sentAt[2], chat.sentAt[3], chat.sentAt[4])}`
-                            }
-                        </ChatBoxExtra>
-                    </ChatBox>
-                </Link>
-            )
-        }
+        let arrayTime = chat.sentAt ? chat.sentAt : chat.createdAt;
+        return (
+            <Link
+                key={chat.anotherUserId + '_found'}
+                to={'/chat/' + chat.anotherUserId}
+                onClick={changeSelectedChat}>
+                <ChatBox selected={isSelected}>
+                    <ChatBoxAvatar backgroundImg={chat.avatar ? "http://localhost:8081/avatars/" + chat.avatar : noAvatarImg}/>
+                    <ChatBoxText>
+                        <ChatBoxTextChatName selected={isSelected}>
+                            { `${chat.name} ${chat.surname}` }
+                        </ChatBoxTextChatName>
+                        <ChatBoxTextLastMessageText selected={isSelected}>
+                            { !chat.text ? "" : chat.userId === meId ? `Me: ${chat.text}` : `${chat.name}: ${chat.text}`}
+                        </ChatBoxTextLastMessageText>
+                    </ChatBoxText>
+                    <ChatBoxExtra selected={isSelected}>
+                        {
+                            `${timeUtil.toPrintDateTime(arrayTime[0], arrayTime[1], arrayTime[2], arrayTime[3], arrayTime[4])}`
+                        }
+                    </ChatBoxExtra>
+                </ChatBox>
+            </Link>
+        )
     });
 
     let foundUsers = searchUsers.map(user => {

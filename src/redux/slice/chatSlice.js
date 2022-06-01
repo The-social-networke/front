@@ -33,7 +33,6 @@ export const findChats = createAsyncThunk(
     'findChats',
     async (_, { getState, rejectWithValue }) => {
         try {
-            console.log('find')
             const state = getState().user;
             return await ChatAPI.findChats(state.jwtToken);
         } catch (ex) {
@@ -222,6 +221,27 @@ const chatSlice = createSlice({
         [sendMessage.fulfilled]: (state, { payload }) => {
             state.chat.messages.push(payload);
             state.isLoadingChat = false;
+
+            // change chats
+            let position;
+            let updatedChat;
+            state.chats.forEach((chat, i) => {
+                if (chat.chatId === payload.chatId) {
+                    let myChat = state.chats[i];
+                    myChat.text = payload.text;
+                    myChat.sentAt = payload.sentAt;
+                    myChat.userId = payload.userId;
+                    myChat.messageId = payload.messageId;
+                    updatedChat = myChat;
+                    position = i;
+                }
+            });
+            if (position !== 0) {
+                state.chats.sort(compareBySentAtThenCreateAt);
+            }
+             else {
+                state.chats[position] = updatedChat;
+            }
         },
         [sendMessage.rejected]: (state, { payload }) => {
             state.error = payload;
@@ -238,6 +258,17 @@ const chatSlice = createSlice({
                 }
             });
             state.isLoadingChat = false;
+
+            // change chats
+            state.chats.forEach((chat, i) => {
+                if (chat.chatId === payload.chatId) {
+                    if (state.chats[i].messageId === payload.id) {
+                        let updateChat = state.chats[i];
+                        updateChat.text = payload.text;
+                        state.chats[i] = updateChat;
+                    }
+                }
+            });
         },
         [updateMessage.rejected]: (state, { payload }) => {
             console.log(payload)
@@ -257,6 +288,36 @@ const chatSlice = createSlice({
             });
             state.chat.messages.splice(index, 1);
             state.isLoadingChat = false;
+
+            // change chats
+            if (state.chat.messages.length === index) {
+                if (index !== 0) {
+                    state.chats.forEach((chat, i) => {
+                        if (chat.chatId === payload.chatId) {
+                            let lastMessage = state.chat.messages[index - 1];
+                            let updateChat = state.chats[i];
+                            updateChat.text = lastMessage.text;
+                            updateChat.sentAt = lastMessage.sentAt;
+                            updateChat.userId = lastMessage.userId;
+                            updateChat.messageId = lastMessage.messageId;
+                            state.chats[i] = updateChat;
+                        }
+                    });
+                }
+                else {
+                    state.chats.forEach((chat, i) => {
+                        if (chat.chatId === payload.chatId) {
+                            let updateChat = state.chats[i];
+                            updateChat.text = null;
+                            updateChat.sentAt = null;
+                            updateChat.userId = null;
+                            updateChat.messageId = null;
+                            state.chats[i] = updateChat;
+                        }
+                    });
+                }
+                state.chats.sort(compareBySentAtThenCreateAt);
+            }
         },
         [deleteMessage.rejected]: (state, { payload }) => {
             console.log(payload)
@@ -280,3 +341,55 @@ const chatSlice = createSlice({
 
 export const { setEditMode, setSelectedChat } = chatSlice.actions;
 export default chatSlice.reducer;
+
+let compareBySentAtThenCreateAt = (b,a) => {
+    if (!a.sentAt || !b.sentAt) {
+        if (!a.sentAt && !b.sentAt) {
+            let yearR = a.createdAt[0] - b.createdAt[0];
+            let monthR = a.createdAt[1] - b.createdAt[1];
+            let dayR = a.createdAt[2] - b.createdAt[2];
+            let hourR = a.createdAt[3] - b.createdAt[3];
+            let minuteR = a.createdAt[4] - b.createdAt[4];
+            let millisR = a.createdAt[5] - b.createdAt[5];
+            if (yearR !== 0) {
+                return yearR;
+            }
+            if (monthR !== 0) {
+                return monthR;
+            }
+            if (dayR !== 0) {
+                return dayR;
+            }
+            if (hourR !== 0) {
+                return hourR;
+            }
+            if (minuteR !== 0) {
+                return minuteR;
+            }
+            return millisR;
+        }
+        return +1;
+    }
+    let yearR = a.sentAt[0] - b.sentAt[0];
+    let monthR = a.sentAt[1] - b.sentAt[1];
+    let dayR = a.sentAt[2] - b.sentAt[2];
+    let hourR = a.sentAt[3] - b.sentAt[3];
+    let minuteR = a.sentAt[4] - b.sentAt[4];
+    let millisR = a.sentAt[5] - b.sentAt[5];
+    if (yearR !== 0) {
+        return yearR;
+    }
+    if (monthR !== 0) {
+        return monthR;
+    }
+    if (dayR !== 0) {
+        return dayR;
+    }
+    if (hourR !== 0) {
+        return hourR;
+    }
+    if (minuteR !== 0) {
+        return minuteR;
+    }
+    return millisR;
+};
